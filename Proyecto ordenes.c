@@ -272,3 +272,59 @@ void eliminar_orden(OrdenTrabajo *ordenes, int *contador) {
         printf("Cancelado.\n");
     }
 }
+
+void cargar_ordenes(OrdenTrabajo *ordenes, int *contador) {
+    FILE *archivo = fopen(ARCHIVO_DATOS, "r");
+    if (archivo == NULL) { 
+        return;
+    }
+
+    char linea[256];
+    *contador = 0;
+
+    fscanf(archivo, " %[^\n]", linea);
+
+    while (fscanf(archivo, " %[^\n]", linea) != EOF && *contador < MAX_ORDENES) {
+        char *token = strtok(linea, ",");
+        if (token != NULL) strcpy(ordenes[*contador].codigo_orden, token);
+        
+        token = strtok(NULL, ",");
+        if (token != NULL) strcpy(ordenes[*contador].nombre_cliente, token);
+        
+        token = strtok(NULL, ",");
+        if (token != NULL) strcpy(ordenes[*contador].equipo, token);
+        
+        token = strtok(NULL, ",");
+        if (token != NULL) strcpy(ordenes[*contador].tipo_trabajo, token);
+        
+        token = strtok(NULL, ",");
+        if (token != NULL) ordenes[*contador].costo_base = atof(token);
+        
+        token = strtok(NULL, ",");
+        if (token != NULL) ordenes[*contador].horas_trabajo = atoi(token);
+        
+        (*contador)++;
+    }
+    fclose(archivo);
+}
+
+void guardar_ordenes(OrdenTrabajo *ordenes, int contador) {
+    FILE *archivo = fopen(ARCHIVO_DATOS, "w");
+    if (archivo == NULL) {
+        printf("Error al guardar el archivo.\n");
+        return;
+    }
+
+    fprintf(archivo, "codigo_orden,nombre_cliente,equipo,tipo_trabajo,costo_base,horas_trabajo\n");
+    for (int i = 0; i < contador; i++) {
+        fprintf(archivo, "%s,%s,%s,%s,%.2f,%d\n",
+                ordenes[i].codigo_orden,
+                ordenes[i].nombre_cliente,
+                ordenes[i].equipo,
+                ordenes[i].tipo_trabajo,
+                ordenes[i].costo_base,
+                ordenes[i].horas_trabajo);
+    }
+    fclose(archivo);
+    printf("Datos guardados en %s.\n", ARCHIVO_DATOS);
+}
