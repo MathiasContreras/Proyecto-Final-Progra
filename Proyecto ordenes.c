@@ -93,7 +93,7 @@ int validar_codigo(char codigo[]) {
 
 int buscar_indice(OrdenTrabajo *ordenes, int contador, char codigo[]) {
     for (int i = 0; i < contador; i++) {
-        // Usamos nuestra propia funcion
+        
         if (comparar_cadenas(ordenes[i].codigo_orden, codigo) == 1) {
             return i;
         }
@@ -103,4 +103,53 @@ int buscar_indice(OrdenTrabajo *ordenes, int contador, char codigo[]) {
 
 float calcular_costo_total(float costo_base, int horas) {
     return costo_base + (horas * TARIFA_HORA);
+}
+
+void registrar_orden(OrdenTrabajo *ordenes, int *contador) {
+    if (*contador >= MAX_ORDENES) {
+        printf("Error: Límite máximo alcanzado.\n");
+        return;
+    }
+
+    OrdenTrabajo nueva_orden;
+    char entrada_codigo[50]; 
+
+    printf("\n--- Registrar Orden ---\n");
+    
+    while (1) {
+        printf("Código (sin espacios, máx 15): ");
+        scanf(" %s", entrada_codigo); 
+
+        if (validar_codigo(entrada_codigo) == 0) {
+            printf("Error: Código inválido.\n");
+        } else if (buscar_indice(ordenes, *contador, entrada_codigo) != -1) {
+            printf("Error: El código ya existe.\n");
+        } else {
+            strcpy(nueva_orden.codigo_orden, entrada_codigo);
+            break;
+        }
+    }
+
+    printf("Cliente: ");
+    scanf(" %[^\n]", nueva_orden.nombre_cliente); 
+
+    printf("Equipo: ");
+    scanf(" %[^\n]", nueva_orden.equipo);
+
+    printf("Trabajo: ");
+    scanf(" %[^\n]", nueva_orden.tipo_trabajo);
+
+    do {
+        printf("Costo base (> 0): ");
+        scanf("%f", &nueva_orden.costo_base);
+    } while (nueva_orden.costo_base <= 0);
+
+    do {
+        printf("Horas (>= 0): ");
+        scanf("%d", &nueva_orden.horas_trabajo);
+    } while (nueva_orden.horas_trabajo < 0);
+
+    ordenes[*contador] = nueva_orden;
+    (*contador)++;
+    printf("Registrada exitosamente.\n");
 }
