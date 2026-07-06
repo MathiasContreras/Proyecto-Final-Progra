@@ -245,3 +245,30 @@ void actualizar_orden(OrdenTrabajo *ordenes, int contador) {
 
     printf("Actualizada exitosamente.\n");
 }
+
+void eliminar_orden(OrdenTrabajo *ordenes, int *contador) {
+    char codigo[16];
+    char confirmacion;
+    
+    printf("\nCódigo a eliminar: ");
+    scanf(" %s", codigo);
+
+    int posicion = buscar_indice(ordenes, *contador, codigo);
+    if (posicion == -1) {
+        printf("No encontrada.\n");
+        return;
+    }
+
+    printf("¿Eliminar %s? (s/n): ", codigo);
+    scanf(" %c", &confirmacion);
+
+    if (confirmacion == 's' || confirmacion == 'S') { 
+        for (int i = posicion; i < *contador - 1; i++) {
+            ordenes[i] = ordenes[i + 1];
+        }
+        (*contador)--;
+        printf("Eliminada.\n");
+    } else {
+        printf("Cancelado.\n");
+    }
+}
