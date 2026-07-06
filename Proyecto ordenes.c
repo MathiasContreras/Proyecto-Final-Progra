@@ -190,3 +190,58 @@ void buscar_orden(OrdenTrabajo *ordenes, int contador) {
         }
     }
 }
+
+void actualizar_orden(OrdenTrabajo *ordenes, int contador) {
+    char codigo[16];
+    char respuesta;
+    
+    printf("\nCódigo a modificar: ");
+    scanf(" %s", codigo);
+
+    int posicion = buscar_indice(ordenes, contador, codigo);
+    if (posicion == -1) {
+        printf("No encontrada.\n");
+        return;
+    }
+
+    printf("Cliente actual: %s. Desea cambiarlo? (s/n): ", ordenes[posicion].nombre_cliente);
+    scanf(" %c", &respuesta);
+    if (respuesta == 's' || respuesta == 'S') {
+        printf("Nuevo cliente: ");
+        scanf(" %[^\n]", ordenes[posicion].nombre_cliente);
+    }
+
+    printf("Equipo actual: %s. Desea cambiarlo? (s/n): ", ordenes[posicion].equipo);
+    scanf(" %c", &respuesta);
+    if (respuesta == 's' || respuesta == 'S') {
+        printf("Nuevo equipo: ");
+        scanf(" %[^\n]", ordenes[posicion].equipo);
+    }
+
+    printf("Trabajo actual: %s. Desea cambiarlo? (s/n): ", ordenes[posicion].tipo_trabajo);
+    scanf(" %c", &respuesta);
+    if (respuesta == 's' || respuesta == 'S') {
+        printf("Nuevo trabajo: ");
+        scanf(" %[^\n]", ordenes[posicion].tipo_trabajo);
+    }
+
+    printf("Costo base actual: %.2f. Desea cambiarlo? (s/n): ", ordenes[posicion].costo_base);
+    scanf(" %c", &respuesta);
+    if (respuesta == 's' || respuesta == 'S') {
+        float nuevo_costo;
+        printf("Nuevo costo: ");
+        scanf("%f", &nuevo_costo);
+        if (nuevo_costo > 0) ordenes[posicion].costo_base = nuevo_costo;
+    }
+
+    printf("Horas actuales: %d. Desea cambiarlo? (s/n): ", ordenes[posicion].horas_trabajo);
+    scanf(" %c", &respuesta);
+    if (respuesta == 's' || respuesta == 'S') {
+        int nuevas_horas;
+        printf("Nuevas horas: ");
+        scanf("%d", &nuevas_horas);
+        if (nuevas_horas >= 0) ordenes[posicion].horas_trabajo = nuevas_horas;
+    }
+
+    printf("Actualizada exitosamente.\n");
+}
