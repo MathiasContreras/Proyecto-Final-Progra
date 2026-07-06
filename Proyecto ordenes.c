@@ -153,3 +153,40 @@ void registrar_orden(OrdenTrabajo *ordenes, int *contador) {
     (*contador)++;
     printf("Registrada exitosamente.\n");
 }
+
+void listar_ordenes(OrdenTrabajo *ordenes, int contador) {
+    if (contador == 0) {
+        printf("\nNo hay órdenes.\n");
+        return;
+    }
+
+    printf("\n%-15s | %-20s | %-15s | %-10s | %-6s | %-10s\n", 
+           "Código", "Cliente", "Equipo", "C. Base", "Horas", "C. Total");
+    printf("----------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < contador; i++) {
+        float total = calcular_costo_total(ordenes[i].costo_base, ordenes[i].horas_trabajo);
+        printf("%-15s | %-20s | %-15s | $%-9.2f | %-6d | $%-9.2f\n",
+               ordenes[i].codigo_orden, ordenes[i].nombre_cliente, ordenes[i].equipo,
+               ordenes[i].costo_base, ordenes[i].horas_trabajo, total);
+    }
+}
+
+void buscar_orden(OrdenTrabajo *ordenes, int contador) {
+    if (contador == 0) return;
+    
+    char busqueda[50];
+    printf("\nBuscar (código exacto o parte del nombre del cliente): ");
+    scanf(" %[^\n]", busqueda);
+
+    for (int i = 0; i < contador; i++) {
+       
+        if (comparar_cadenas(ordenes[i].codigo_orden, busqueda) == 1 || 
+            contiene_subcadena(ordenes[i].nombre_cliente, busqueda) == 1) {
+            
+            float total = calcular_costo_total(ordenes[i].costo_base, ordenes[i].horas_trabajo);
+            printf("Código: %s | Cliente: %s | Equipo: %s | C.Total: $%.2f\n",
+                   ordenes[i].codigo_orden, ordenes[i].nombre_cliente, ordenes[i].equipo, total);
+        }
+    }
+}
